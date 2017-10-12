@@ -1,8 +1,9 @@
 package udp
 
 import (
-	"fmt"
 	"net"
+
+	log "github.com/sirupsen/logrus"
 )
 
 //Tx send UDP traffic
@@ -21,7 +22,15 @@ func (output Connection) Tx(msg []byte) {
 
 	_, err = conn.Write(msg)
 	if err != nil {
-		fmt.Printf("Could not forward the following data %v", string(msg))
+		log.Warnf(
+			"Could not forward the following data %v %v %v",
+			output,
+			string(msg),
+			err.Error(),
+		)
+		return
 	}
+
+	log.Debugf("Sent %v to %v", string(msg), output)
 
 }
