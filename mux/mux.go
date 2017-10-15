@@ -56,7 +56,7 @@ func GetConnection(o Opts) protocols.BaseConnection {
 			Port:     o.Port,
 		}
 	default:
-		fmt.Printf("%v protocol not supported. Yet\n", o.Protocol)
+		fmt.Printf("Invalid args. Run with --help")
 		os.Exit(1)
 	}
 	return nil

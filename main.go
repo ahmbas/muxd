@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/ahmbas/muxd/mux"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"
@@ -14,7 +15,7 @@ func init() {
 	formatter.FullTimestamp = true
 	log.SetFormatter(formatter)
 	log.SetOutput(os.Stdout)
-	log.SetLevel(log.DebugLevel)
+	log.SetLevel(log.WarnLevel)
 }
 
 func main() {
@@ -27,8 +28,11 @@ func main() {
 	var outputHost string
 	var outputPort int
 	var outputChannel string
+	var debugLevel bool
 
 	app := cli.NewApp()
+	app.Version = "0.0.1"
+	app.Usage = "Network multiplexer"
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
@@ -79,8 +83,17 @@ func main() {
 			Usage:       "Output channel [redis]",
 			Destination: &outputChannel,
 		},
+		cli.BoolFlag{
+			Name:        "debug",
+			Usage:       "Set debug log level",
+			Destination: &debugLevel,
+		},
 	}
 	app.Action = func(c *cli.Context) error {
+
+		if debugLevel {
+			log.SetLevel(log.DebugLevel)
+		}
 
 		inputOpts := mux.Opts{
 			Protocol: inputProtocol,
